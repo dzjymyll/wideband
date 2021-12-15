@@ -19,6 +19,7 @@ from win32com import client
 import os
 import re
 import csv
+import math
 
 
 class HFSS:
@@ -113,7 +114,7 @@ class HFSS:
 
     def export(self):
         self.oDesktop.RestoreWindow
-        oProject = self.oDesktop.SetActiveProject("Probe_fed_DRA")
+        oProject = self.oDesktop.SetActiveProject("tripleband")
         oDesign = oProject.SetActiveDesign("HFSSDesign1")
         oModule = oDesign.GetModule("ReportSetup")
         path = os.path.join(os.getcwd(),'S Parameter Plot 1.csv')
@@ -123,11 +124,27 @@ class HFSS:
             f_csv = csv.reader(f)
             headers_1 = next(f_csv)
             for row in f_csv:
-                fr = float(row[0])
-                s_value = float(row[1])
-                if fr >= 2.4 and fr <=5.2:
+                fr = float(row[-2])
+                s_value = float(row[-1])
+
+                if fr >= 2.4 and fr <=2.48:
+                    #cost = cost + math.exp(s_value+10)/(1+math.exp(s_value+10))
                     if s_value > -10:
                         cost = cost + s_value + 10
+                if fr >= 3.4 and fr <=3.6:
+                    if s_value > -10:
+                        cost = cost + s_value + 10
+                if fr >= 5.15 and fr <=5.35:
+                    if s_value > -10:
+                        cost = cost + s_value + 10
+                    '''
+                    if s_value > -14:
+                        if s_value <= -10:
+                            cost = cost + math.exp(s_value+10)/(1+math.exp(s_value+10))
+                        else:
+                            cost = cost + s_value + 10.5
+                    '''
+                    #    cost = cost + s_value + 10
         return cost
 
 

@@ -15,18 +15,18 @@ print(f'This program started at: {time_string}')
 from PSO import PSO
 
 optimization_target='''***************************************************************\n
-the target : Design a wideband antenna\n 
+the target : Design a triple-band antenna\n 
 ***************************************************************\n'''
 
-Optimization_variables='dra_x', 'dra_y', 'dra_z', 'strip_y', 'strip_z'
+Optimization_variables='slot_x', 'slot_y', 'feedline_x'
 _base_path = os.getcwd()
 
-hfss_Optimization_record_dir = os.path.join(_base_path,'DRA Record')
+hfss_Optimization_record_dir = os.path.join(_base_path,'tripleband')
 if not os.path.exists(hfss_Optimization_record_dir):
     os.mkdir(hfss_Optimization_record_dir)
 hfss_Optimization_record_file_name = f'Record for simulations {time_string_file_name}.txt'
-pso = PSO(Optimization_variables=Optimization_variables, n_dim=5, pop=10, max_iter=10,
-          lb=[5,5,5,0.5,1], ub=[50,50,50,10,30], w=0.8, c1=0.5, c2=0.5,
+pso = PSO(Optimization_variables=Optimization_variables, n_dim=3, pop=10, max_iter=20,
+          lb=[1,1,1], ub=[38,29,19], w=0.8, c1=0.5, c2=0.5,
           optimization_target=optimization_target,hfss_Optimization_record_dir=hfss_Optimization_record_dir, hfss_Optimization_record_file_name=hfss_Optimization_record_file_name)
 pso.run()
 
